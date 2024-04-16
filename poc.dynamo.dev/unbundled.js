@@ -15,8 +15,8 @@ const server = http.createServer((req, res) => {
     }
 
     if (pathname === '/dist') {
-        const projectPath = parsedUrl.query.projectPath || './'; // Default to current directory if projectPath is not provided
-        const entryPoint = parsedUrl.query.entryPoint || 'main.js'; // Default to 'main.js' if entryPoint is not provided
+        const projectPath = parsedUrl.query.projectPath || './src';
+        const entryPoint = parsedUrl.query.entryPoint || 'main.js'; 
         const bundle = generateBundle(projectPath, entryPoint);
         setCorsHeaders(res); // Set CORS headers for bundle response
         res.writeHead(200, {'Content-Type': 'application/javascript'});
@@ -26,7 +26,7 @@ const server = http.createServer((req, res) => {
         // Serve JavaScript files from the 'src' directory
         setCorsHeaders(res); // Set CORS headers for JavaScript files
 
-        const filePath = path.join(__dirname, pathname);
+        const filePath = path.join(process.cwd(), pathname);
         if (fs.existsSync(filePath)) {
             const fileContent = fs.readFileSync(filePath);
             res.writeHead(200, {'Content-Type': 'application/javascript'});
