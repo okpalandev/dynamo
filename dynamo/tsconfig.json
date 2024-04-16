@@ -19,7 +19,8 @@
     "baseUrl": "./",
     "paths": {
       "dynamo/cli": ["src/cli"],
-      "dynamo/bundler": ["src/bundler"]
+      "dynamo/bundler": ["src/bundler"],
+      "dynamo/config":["src/config"]
     }
   }
 }
