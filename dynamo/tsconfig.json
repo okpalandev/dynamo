@@ -1,12 +1,4 @@
 {
-  "compilerOptions": {
-    "target": "ES2017",
-    "module": "Bundler",
-    "outDir": "./dist",
-    "rootDir": "./src",
-    "strict": true,
-    "esModuleInterop": true
-  },
   "include": [
     "./src/**/*.ts",
     "./spec/**/*.spec.ts"
@@ -17,13 +9,17 @@
   "references": [
     { "path": "./src" }
   ],
-  "files": [],
   "compilerOptions": {
     "declaration": true,
     "declarationDir": "./types",
     "removeComments": true,
     "moduleResolution": "node",
     "sourceMap": true,
-    "resolveJsonModule": true
+    "resolveJsonModule": true,
+    "baseUrl": "./",
+    "paths": {
+      "dynamo/cli": ["src/cli"],
+      "dynamo/bundler": ["src/bundler"]
+    }
   }
 }
