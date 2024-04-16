@@ -6,8 +6,8 @@ const path = require('path');
 const server = http.createServer((req, res) => {
     const parsedUrl = url.parse(req.url, true);
     const pathname = parsedUrl.pathname;
-    
-    if (pathname === '/bundle') {
+
+    if (pathname === '/dist') {
         const projectPath = parsedUrl.query.projectPath;
         const entryPoint = parsedUrl.query.entryPoint;
         const bundle = generateBundle(projectPath, entryPoint);
