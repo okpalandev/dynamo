@@ -2,7 +2,6 @@ const http = require('http');
 const fs = require('fs');
 const url = require('url');
 const path = require('path');
-const bundle = require('./src/bundle');
 
 const server = http.createServer((req, res) => {
     const parsedUrl = url.parse(req.url, true);
@@ -16,12 +15,12 @@ const server = http.createServer((req, res) => {
     }
 
     if (pathname === '/dist') {
-        const projectPath = './'; // Adjust this according to your project structure
-        const entryPoint = './src/main.js'; // Adjust this according to your project structure
-        const bundledCode = bundle(projectPath, entryPoint); // Call the bundle function with projectPath and entryPoint
+        const projectPath = parsedUrl.query.projectPath;
+        const entryPoint = parsedUrl.query.entryPoint;
+        const bundle = generateBundle(projectPath, entryPoint); // Use bundle here LINE 2
         setCorsHeaders(res); // Set CORS headers for bundle response
         res.writeHead(200, {'Content-Type': 'application/javascript'});
-        res.end(bundledCode);
+        res.end(bundle);
     }
     else if (pathname.startsWith('/src/') && pathname.endsWith('.js')) {
         // Serve JavaScript files from the 'src' directory
@@ -47,7 +46,9 @@ const server = http.createServer((req, res) => {
     }
 });
 
-
+function generateBundle() {
+  
+}
 server.listen(3000, () => {
     console.log('Server is running on port 3000');
 });
