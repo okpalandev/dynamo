@@ -12,9 +12,10 @@ const server = http.createServer((req, res) => {
         const entryPoint = parsedUrl.query.entryPoint;
         const bundle = generateBundle(projectPath, entryPoint);
         
-        res.writeHead(200, {'Content-Type': 'application/javascript'});
+        res.writeHead(200, {'Content-Type': 'application/javascript'}); 
         res.end(bundle);
-    } else {
+    }
+    else {
         // Serve HTML page with client-side code
         const htmlPath = path.join(__dirname, 'index.html');
         const html = fs.readFileSync(htmlPath);
