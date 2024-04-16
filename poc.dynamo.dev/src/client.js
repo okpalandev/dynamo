@@ -6,7 +6,7 @@ window.addEventListener('load', function() {
     fetch(bundleEndpoint)
         .then(response => response.text())
         .then(bundle => {
-            new Function(bundle);
+            new Function(bundle)()
         })
         .catch(error => console.error('Error fetching bundle:', error));
 });
