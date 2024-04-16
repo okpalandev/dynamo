@@ -1,0 +1,29 @@
+{
+  "compilerOptions": {
+    "target": "ES2017",
+    "module": "Bundler",
+    "outDir": "./dist",
+    "rootDir": "./src",
+    "strict": true,
+    "esModuleInterop": true
+  },
+  "include": [
+    "./src/**/*.ts",
+    "./spec/**/*.spec.ts"
+  ],
+  "exclude": [
+    "node_modules"
+  ],
+  "references": [
+    { "path": "./src" }
+  ],
+  "files": [],
+  "compilerOptions": {
+    "declaration": true,
+    "declarationDir": "./types",
+    "removeComments": true,
+    "moduleResolution": "node",
+    "sourceMap": true,
+    "resolveJsonModule": true
+  }
+}
