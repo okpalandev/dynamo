@@ -18,7 +18,7 @@ function bundle(projectPath, entryPoint) {
     // Execute the module code with `_require`, `module`, and `exports`
     // available as local variables.
     const moduleCode = fs.readFileSync(fullPath, 'utf8');
-    const wrappedCode = `(function (_require, module, exports, __dirname, __filename) { ${moduleCode} })(_require, module, module.exports, "${path.dirname(fullPath)}", "${fullPath}")`;
+    const wrappedCode = `(function (require, module, exports, __dirname, __filename) { ${moduleCode} })(require, module, module.exports, "${path.dirname(fullPath)}", "${fullPath}")`;
     eval(wrappedCode);
 
     return module.exports;
