@@ -2,7 +2,7 @@ const http = require('http');
 const fs = require('fs');
 const url = require('url');
 const path = require('path');
-const bundle = require('./src/bundle');
+const bundle = require('./src/bundler');
 
 const server = http.createServer((req, res) => {
     const parsedUrl = url.parse(req.url, true);
