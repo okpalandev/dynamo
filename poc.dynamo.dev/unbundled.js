@@ -15,9 +15,9 @@ const server = http.createServer((req, res) => {
     }
 
     if (pathname === '/dist') {
-        const projectPath = parsedUrl.query.projectPath;
-        const entryPoint = parsedUrl.query.entryPoint;
-        const bundle = generateBundle(projectPath, entryPoint); // Use bundle here LINE 2
+        const projectPath = parsedUrl.query.projectPath || './'; // Default to current directory if projectPath is not provided
+        const entryPoint = parsedUrl.query.entryPoint || 'main.js'; // Default to 'main.js' if entryPoint is not provided
+        const bundle = generateBundle(projectPath, entryPoint);
         setCorsHeaders(res); // Set CORS headers for bundle response
         res.writeHead(200, {'Content-Type': 'application/javascript'});
         res.end(bundle);
@@ -50,9 +50,10 @@ function generateBundle(projectPath, entryPoint) {
     const files = [
         fs.readFileSync(path.join(projectPath, entryPoint), 'utf-8')
     ];
-    
+
     return files.join('\n');
 }
+
 server.listen(3000, () => {
     console.log('Server is running on port 3000');
 });
