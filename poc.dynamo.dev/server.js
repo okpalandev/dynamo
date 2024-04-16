@@ -2,6 +2,7 @@ const http = require('http');
 const fs = require('fs');
 const url = require('url');
 const path = require('path');
+
 const server = http.createServer((req, res) => {
     const parsedUrl = url.parse(req.url, true);
     const pathname = parsedUrl.pathname;
@@ -17,17 +18,23 @@ const server = http.createServer((req, res) => {
         const projectPath = parsedUrl.query.projectPath;
         const entryPoint = parsedUrl.query.entryPoint;
         const bundle = generateBundle(projectPath, entryPoint);
-        res.writeHead(200, {'Content-Type': 'application/javascript'}); 
+        setCorsHeaders(res); // Set CORS headers for bundle response
+        res.writeHead(200, {'Content-Type': 'application/javascript'});
         res.end(bundle);
     }
-    else if (pathname === '/src/client.js') {
-        // Serve the client.js file
-        setCorsHeaders(res); // Set CORS headers for this response
-        const clientJsPath = path.join(__dirname, 'src', 'client.js');
-        const clientJs = fs.readFileSync(clientJsPath);
-        
-        res.writeHead(200, {'Content-Type': 'application/javascript'});
-        res.end(clientJs);
+    else if (pathname.startsWith('/src/') && pathname.endsWith('.js')) {
+        // Serve JavaScript files from the 'src' directory
+        setCorsHeaders(res); // Set CORS headers for JavaScript files
+
+        const filePath = path.join(__dirname, pathname);
+        if (fs.existsSync(filePath)) {
+            const fileContent = fs.readFileSync(filePath);
+            res.writeHead(200, {'Content-Type': 'application/javascript'});
+            res.end(fileContent);
+        } else {
+            res.writeHead(404, {'Content-Type': 'text/plain'});
+            res.end('File not found');
+        }
     }
     else {
         // Serve HTML page with client-side code
@@ -52,6 +59,6 @@ function generateBundle(projectPath, entryPoint) {
     const files = [
         fs.readFileSync(path.join(projectPath, entryPoint), 'utf-8')
     ];
-    
+
     return files.join('\n');
 }
