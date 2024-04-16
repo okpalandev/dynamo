@@ -1,9 +1,8 @@
-// Define Command Interface
 class Command {
   constructor(){
     if (this.constructor.name === Command)
-    throw  "Command is an Abstract Base Class!
-          It is not intended to be used directly";
+      throw "Command is an Abstract Base Class!
+    It is not intended to be used directly";
   }
   execute() {}
 }
@@ -11,7 +10,7 @@ class Command {
 // Implement Concrete Commands
 export class BuildCommand extends Command {
   execute() {
-    
+
   }
 }
 
