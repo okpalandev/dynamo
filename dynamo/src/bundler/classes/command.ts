@@ -27,7 +27,7 @@ class BundleCommand {
         const entryContent = fs.readFileSync(entryFilePath, 'utf8');
         const modules: { [key: string]: any } = {};
 
-        function require(modulePath: string): any {
+        function _require(modulePath: string): any {
             const fullPath = path.resolve(__dirname, modulePath);
             if (modules[fullPath]) {
                 return modules[fullPath].exports;
@@ -36,15 +36,15 @@ class BundleCommand {
             const module = { exports: {} };
             modules[fullPath] = module;
 
-            // Execute the module code with `require`, `module`, and `exports`
+            // Execute the module code with `_require`, `module`, and `exports`
             // available as local variables.
             const moduleCode = fs.readFileSync(fullPath, 'utf8');
-            const wrappedCode = `(function (require, module, exports, __dirname, __filename) { ${moduleCode} })(require, module, module.exports, "${path.dirname(fullPath)}", "${fullPath}")`;
+            const wrappedCode = `(function (_require, module, exports, __dirname, __filename) { ${moduleCode} })(_require, module, module.exports, "${path.dirname(fullPath)}", "${fullPath}")`;
             new Function(wrappedCode);
             return module.exports;
         }
 
-        require(entryFilePath);
+        _require(entryFilePath);
 
         // Create the bundle
         const bundledCode = Object.keys(modules)
