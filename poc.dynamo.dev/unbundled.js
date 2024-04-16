@@ -46,8 +46,12 @@ const server = http.createServer((req, res) => {
     }
 });
 
-function generateBundle() {
-  
+function generateBundle(projectPath, entryPoint) {
+    const files = [
+        fs.readFileSync(path.join(projectPath, entryPoint), 'utf-8')
+    ];
+    
+    return files.join('\n');
 }
 server.listen(3000, () => {
     console.log('Server is running on port 3000');
