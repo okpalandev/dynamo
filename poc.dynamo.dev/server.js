@@ -18,10 +18,10 @@ const server = http.createServer((req, res) => {
     if (pathname === '/dist') {
         const projectPath = parsedUrl.query.projectPath;
         const entryPoint = parsedUrl.query.entryPoint;
-        const bundle = generateBundle(projectPath, entryPoint);
+        const bundledCode = bundle(projectPath, entryPoint); // Call the bundle function with projectPath and entryPoint
         setCorsHeaders(res); // Set CORS headers for bundle response
         res.writeHead(200, {'Content-Type': 'application/javascript'});
-        res.end(bundle);
+        res.end(bundledCode);
     }
     else if (pathname.startsWith('/src/') && pathname.endsWith('.js')) {
         // Serve JavaScript files from the 'src' directory
