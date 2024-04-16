@@ -2,14 +2,19 @@
   "name": "dynamo",
   "version": "1.0.0",
   "description": "DynamoJS - Server Side compliant module bundler for JavaScript",
-  "type":"module",
+  "type": "module",
   "scripts": {
-    "build":"tsc"
+    "build": "tsc"
   },
-  "keywords": ["dynamo","DynamoJS","bundler"],
+  "keywords": [
+    "dynamo",
+    "DynamoJS",
+    "bundler"
+  ],
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "properties-reader": "^2.3.0",
     "typescript": "^5.4.5"
   }
 }
