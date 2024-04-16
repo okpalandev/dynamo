@@ -2,10 +2,16 @@ const http = require('http');
 const fs = require('fs');
 const url = require('url');
 const path = require('path');
-
 const server = http.createServer((req, res) => {
     const parsedUrl = url.parse(req.url, true);
     const pathname = parsedUrl.pathname;
+
+    // Function to set CORS headers
+    function setCorsHeaders(res) {
+        res.setHeader('Access-Control-Allow-Origin', '*'); // Allow requests from any origin
+        res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS'); // Allow GET, POST, and OPTIONS methods
+        res.setHeader('Access-Control-Allow-Headers', 'Content-Type'); // Allow only Content-Type header
+    }
 
     if (pathname === '/dist') {
         const projectPath = parsedUrl.query.projectPath;
@@ -13,6 +19,15 @@ const server = http.createServer((req, res) => {
         const bundle = generateBundle(projectPath, entryPoint);
         res.writeHead(200, {'Content-Type': 'application/javascript'}); 
         res.end(bundle);
+    }
+    else if (pathname === '/src/client.js') {
+        // Serve the client.js file
+        setCorsHeaders(res); // Set CORS headers for this response
+        const clientJsPath = path.join(__dirname, 'src', 'client.js');
+        const clientJs = fs.readFileSync(clientJsPath);
+        
+        res.writeHead(200, {'Content-Type': 'application/javascript'});
+        res.end(clientJs);
     }
     else {
         // Serve HTML page with client-side code
@@ -23,6 +38,7 @@ const server = http.createServer((req, res) => {
         res.end(html);
     }
 });
+
 
 server.listen(3000, () => {
     console.log('Server is running on port 3000');

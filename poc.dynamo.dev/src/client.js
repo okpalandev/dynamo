@@ -1,6 +1,6 @@
 window.addEventListener('load', function() {
     const projectPath = 'src/';
-    const entryPoint = 'src/main.js';
+    const entryPoint = 'main.js';
     const bundleEndpoint = `http://localhost:3000/dist?projectPath=${encodeURIComponent(projectPath)}&entryPoint=${encodeURIComponent(entryPoint)}`;
     console.log('Fetching bundle from:', bundleEndpoint);
     fetch(bundleEndpoint)
