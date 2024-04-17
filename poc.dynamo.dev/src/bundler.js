@@ -1,41 +1,45 @@
 const fs = require('fs');
 const path = require('path');
-
 function bundle(projectPath, entryPoint) {
-  const entryFile = path.resolve(projectPath, entryPoint);
-  const entryContent = fs.readFileSync(entryFile, 'utf8');
-  const modules = {};
+    // Define an object to store module exports
+    const modules = {};
 
-  function _require(modulePath) {
-    const fullPath = path.resolve(projectPath, modulePath);
-    if (modules[fullPath]) {
-      return modules[fullPath].exports;
+    // Define a function to resolve dependencies
+    function _require(modulePath) {
+        // Check if the module is already loaded
+        if (modules[modulePath]) {
+            return modules[modulePath];
+        }
+
+        // Define a new module object
+        const module = { exports: {} };
+        // Execute the module code and pass the _require function
+        // as well as the module and exports objects
+        const moduleFunction = modules[modulePath] = new Function('require', 'module', 'exports', `
+            ${fs.readFileSync(path.resolve(projectPath, modulePath), 'utf8')}
+        `);
+
+        // Call the module function with the _require function and
+        // module and exports objects as arguments
+        moduleFunction(_require, module, module.exports);
+
+        // Return the module's exports
+        return module.exports;
     }
 
-    const module = { exports: {} };
-    modules[fullPath] = module;
+    // Load the entry point module
+    _require(entryPoint);
 
-    // Execute the module code with `_require`, `module`, and `exports`
-    // available as local variables.
-    const moduleCode = fs.readFileSync(fullPath, 'utf8');
-    const wrappedCode = `(function (require, module, exports, __dirname, __filename) { ${moduleCode} })(require, module, module.exports, "${path.dirname(fullPath)}", "${fullPath}")`;
-    new Function(wrappedCode)()
-    return module.exports;
-  }
+    // Create the bundle
+    const bundledCode = Object.keys(modules)
+        .map(modulePath => {
+            const moduleName = JSON.stringify(path.relative(projectPath, modulePath));
+            const moduleContent = modules[modulePath]?.exports?.toString() || '';
+            return `// ${moduleName}\n${moduleContent}`;
+        })
+        .join('\n\n');
 
-  _require(entryPoint);
-
-  // Create the bundle
-  const bundledCode = Object.keys(modules)
-      .map(modulePath => {
-          const moduleName = JSON.stringify(path.relative(projectPath, modulePath));
-          const moduleContent = modules[modulePath].exports.toString();
-          return `// ${moduleName}\n${moduleContent}`;
-      })
-      .join('\n\n');
-
-
-  return bundledCode;
+    return bundledCode;
 }
 
 module.exports = bundle;
