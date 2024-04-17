@@ -8,8 +8,7 @@ window.addEventListener('load', function() {
     fetch(bundleEndpoint)
         .then(response => response.text())
         .then(bundle => {
-            console.log(bundle);
-            new Function(bundle)();
+            new Function(bundle)(); // is browser
         })
         .catch(error => console.error('Error fetching bundle:', error));
 });
