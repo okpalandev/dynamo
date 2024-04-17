@@ -19,8 +19,7 @@ function bundle(projectPath, entryPoint) {
     // available as local variables.
     const moduleCode = fs.readFileSync(fullPath, 'utf8');
     const wrappedCode = `(function (require, module, exports, __dirname, __filename) { ${moduleCode} })(require, module, module.exports, "${path.dirname(fullPath)}", "${fullPath}")`;
-    eval(wrappedCode);
-
+    new Function(wrappedCode)()
     return module.exports;
   }
 
@@ -28,12 +27,13 @@ function bundle(projectPath, entryPoint) {
 
   // Create the bundle
   const bundledCode = Object.keys(modules)
-    .map(modulePath => {
-      const moduleName = JSON.stringify(path.relative(projectPath, modulePath));
-      const moduleContent = modules[modulePath].exports.toString();
-      return `// ${moduleName}\n${moduleContent}`;
-    })
-    .join('\n\n');
+      .map(modulePath => {
+          const moduleName = JSON.stringify(path.relative(projectPath, modulePath));
+          const moduleContent = modules[modulePath].exports.toString();
+          return `// ${moduleName}\n${moduleContent}`;
+      })
+      .join('\n\n');
+
 
   return bundledCode;
 }
