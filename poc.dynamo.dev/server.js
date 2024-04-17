@@ -7,6 +7,12 @@ const bundle = require('./src/bundler');
 const server = http.createServer((req, res) => {
     const parsedUrl = url.parse(req.url, true);
     const pathname = parsedUrl.pathname;
+    if (req.method === 'OPTIONS') {
+        setCorsHeaders(res);
+        res.writeHead(200);
+        res.end();
+        return;
+    }
 
     // Function to set CORS headers
     function setCorsHeaders(res) {
@@ -16,13 +22,14 @@ const server = http.createServer((req, res) => {
     }
 
     if (pathname === '/dist') {
-        const projectPath = './'; // Adjust this according to your project structure
-        const entryPoint = './src/main.js'; // Adjust this according to your project structure
-        const bundledCode = bundle(projectPath, entryPoint); // Call the bundle function with projectPath and entryPoint
-        setCorsHeaders(res); // Set CORS headers for bundle response
-        res.writeHead(200, {'Content-Type': 'application/javascript'});
-        res.end(bundledCode);
-    }
+      const projectPath = './';
+      const entryPoint = './src/main.js';
+      const bundledCode = bundle(projectPath, entryPoint); // Call the bundle function with projectPath and entryPoint
+      setCorsHeaders(res); // Set CORS headers for bundle response
+      res.writeHead(200, {'Content-Type': 'application/javascript'});
+      res.end(bundledCode);
+  }
+
     else if (pathname.startsWith('/src/') && pathname.endsWith('.js')) {
         // Serve JavaScript files from the 'src' directory
         setCorsHeaders(res); // Set CORS headers for JavaScript files
@@ -37,6 +44,7 @@ const server = http.createServer((req, res) => {
             res.end('File not found');
         }
     }
+
     else {
         // Serve HTML page with client-side code
         const htmlPath = path.join(__dirname, 'index.html');
